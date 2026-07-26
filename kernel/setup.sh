@@ -2,8 +2,6 @@
 set -eu
 
 GKI_ROOT= $( pwd )
-PEMILIK= " awangunawan12332122-lab "
-REPO= " KernelSU-Next "
 
 display_usage() {
     echo "Usage: $0 [--cleanup | <commit-or-tag>]"
