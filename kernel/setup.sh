@@ -1,9 +1,9 @@
 #!/bin/sh
 set -eu
 
-GKI_ROOT= $( pwd )
-PEMILIK= " awangunawan12332122-lab "
-REPO= " KernelSU-Next "
+GKI_ROOT="$(pwd)"
+PEMILIK="awangunawan12332122-lab"
+REPO="KernelSU-Next"
 
 display_usage() {
     echo "Usage: $0 [--cleanup | <commit-or-tag>]"
@@ -23,8 +23,8 @@ initialize_variables() {
          exit 127
     fi
 
-    DRIVER_MAKEFILE=$DRIVER_DIR/Makefile
-    DRIVER_KCONFIG=$DRIVER_DIR/Kconfig
+    DRIVER_MAKEFILE="$DRIVER_DIR/Makefile"
+    DRIVER_KCONFIG="$DRIVER_DIR/Kconfig"
 }
 
 # Reverts modifications made by this script
@@ -41,13 +41,15 @@ perform_cleanup() {
 # Sets up or update KernelSU-Next environment
 setup_kernelsu() {
     echo "[+] Setting up $REPO..."
-    test -d "$GKI_ROOT/$REPO" || git clone "https://github.com/$OWNER/$REPO" && echo "[+] Repository cloned."
+    if [ ! -d "$GKI_ROOT/$REPO" ]; then
+        git clone "https://github.com/$PEMILIK/$REPO" "$GKI_ROOT/$REPO" && echo "[+] Repository cloned."
+    fi
     cd "$GKI_ROOT/$REPO"
-    git stash && echo "[-] Stashed current changes."
+    git stash || true && echo "[-] Stashed current changes."
 
     BRANCH="$(git rev-parse --abbrev-ref origin/HEAD | sed 's@^origin/@@')"
     if [ "$(git status | grep -Po 'v\d+(\.\d+)*' | head -n1)" ]; then
-        git checkout $BRANCH && echo "[-] Switched to $BRANCH branch."
+        git checkout "$BRANCH" && echo "[-] Switched to $BRANCH branch."
     fi
 
     git pull && echo "[+] Repository updated."
